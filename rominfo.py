@@ -2,34 +2,7 @@ import sys
 import zlib
 import hashlib
 
-
-def get_size(file: bytes):
-    return len(file)
-
-
-def get_crc32(file: bytes):
-    val = zlib.crc32(file)
-    return hex(val)[2:]
-
-
-def get_hashlib_hex(file: bytes, m: hashlib._Hash):
-    m.update(file)
-    return m.hexdigest()
-
-
-def get_md5(file: bytes):
-    m = hashlib.md5()
-    return get_hashlib_hex(file, m)
-
-
-def get_sha1(file: bytes):
-    m = hashlib.sha1()
-    return get_hashlib_hex(file, m)
-
-
-def get_sha256(file: bytes):
-    m = hashlib.sha256()
-    return get_hashlib_hex(file, m)
+import helpers.hashes as hashes
 
 
 def get_file_string(file_path: str):
@@ -37,11 +10,11 @@ def get_file_string(file_path: str):
         file = f.read()
         file_name = file_path.split('/').pop()
         return f"""--- {file_name} ---
-Size: {get_size(file)} bytes
-CRC32: {get_crc32(file)}
-MD5: {get_md5(file)}
-SHA-1: {get_sha1(file)}
-SHA-256: {get_sha256(file)}\n\n"""
+Size: {hashes.get_size(file)} bytes
+CRC32: {hashes.get_crc32(file)}
+MD5: {hashes.get_md5(file)}
+SHA-1: {hashes.get_sha1(file)}
+SHA-256: {hashes.get_sha256(file)}\n\n"""
 
 
 def read_file_args():

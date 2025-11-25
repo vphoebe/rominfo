@@ -1,41 +1,52 @@
 import sys
-import zlib
-import hashlib
-
-import helpers.hashes as hashes
-
-
-def get_file_string(file_path: str):
-    with open(file_path, 'rb') as f:
-        file = f.read()
-        file_name = file_path.split('/').pop()
-        return f"""--- {file_name} ---
-Size: {hashes.get_size(file)} bytes
-CRC32: {hashes.get_crc32(file)}
-MD5: {hashes.get_md5(file)}
-SHA-1: {hashes.get_sha1(file)}
-SHA-256: {hashes.get_sha256(file)}\n\n"""
+import argparse
+from helpers.outputs import get_dat_string
+from helpers.outputs import get_file_string
 
 
 def read_file_args():
-    if len(sys.argv) < 2:
-        print(
-            "Error: No files provided.\nUsage: python rominfo.py file1.rom [file2.rom ...]")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description='Generate common hashes for ROM files.')
+
+    parser.add_argument(
+        '-d',
+        '--dat',
+        help="Output as Redump DAT lines",
+        action="store_true"
+    )
+    parser.add_argument(
+        '-o',
+        '--output_file',
+        nargs="?",
+        help="Specify output file path (defaults to hashes.txt)",
+        default="hashes.txt",
+        const="hashes.txt",
+    )
+    parser.add_argument(
+        'file',
+        nargs='+',
+        help="path(s) to ROM file"
+    )
+    args = parser.parse_args()
 
     strings = []
-    for file_path in sys.argv[1:]:
+    for file_path in args.file:
         try:
-            string = get_file_string(file_path)
+            print(f"Processing {file_path}...")
+            string = ''
+            if args.dat:
+                string = get_dat_string(file_path)
+            else:
+                string = get_file_string(file_path)
             strings.append(string)
         except FileNotFoundError:
             print(f"Error: File '{file_path}' not found.")
         except Exception as e:
             print(f"Error reading '{file_path}': {str(e)}")
 
-    with open('hashes.txt', 'w') as output:
+    with open(args.output_file, 'w') as output:
         output.write(''.join(strings))
-        print(f"Wrote {len(strings)} file(s) to hashes.txt")
+        print(f"Wrote {len(strings)} file(s) to {args.output_file}")
 
 
 if __name__ == "__main__":

@@ -3,30 +3,25 @@ import hashlib
 import zlib
 
 
-def get_size(file: bytes):
-    return len(file)
-
-
-def get_crc32(file: bytes):
-    val = zlib.crc32(file)
-    return hex(val)[2:]
-
-
-def get_hashlib_hex(file: bytes, m: hashlib._Hash):
-    m.update(file)
-    return m.hexdigest()
-
-
-def get_md5(file: bytes):
-    m = hashlib.md5()
-    return get_hashlib_hex(file, m)
-
-
-def get_sha1(file: bytes):
-    m = hashlib.sha1()
-    return get_hashlib_hex(file, m)
-
-
-def get_sha256(file: bytes):
-    m = hashlib.sha256()
-    return get_hashlib_hex(file, m)
+def get_hashes(file_path: str):
+    file_name = file_path.split('/').pop()
+    size = 0
+    a = hashlib.sha256()
+    b = hashlib.sha1()
+    c = hashlib.md5()
+    crc = 0
+    with open(file_path, 'rb') as f:
+        while (buf := f.read(1024)):
+            size += len(buf)
+            a.update(buf)
+            b.update(buf)
+            c.update(buf)
+            crc = zlib.crc32(buf, crc)
+        return {
+            "name": file_name,
+            "size": size,
+            "sha256": a.hexdigest(),
+            "sha1": b.hexdigest(),
+            "md5": c.hexdigest(),
+            "crc": hex(crc)[2:]
+        }

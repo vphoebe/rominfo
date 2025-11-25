@@ -1,9 +1,10 @@
 import sys
 import argparse
-from helpers.outputs import get_dat_string, get_file_string
+from helpers.hashes import get_hashes
+from helpers.format import get_file_string
 
 
-def read_file_args():
+def rominfo():
     parser = argparse.ArgumentParser(
         description='Generate common hashes for ROM files.')
 
@@ -28,22 +29,22 @@ def read_file_args():
     )
     args = parser.parse_args()
 
-    strings = []
+    result = ""
     for file_path in args.file:
         try:
             print(f"Processing {file_path}...")
-            string = get_dat_string(
-                file_path) if args.dat else get_file_string(file_path)
-            strings.append(string)
+            hashes = get_hashes(file_path)
+            line = get_file_string(hashes, args.dat)
+            result += line
         except FileNotFoundError:
             print(f"Error: File '{file_path}' not found.")
         except Exception as e:
             print(f"Error reading '{file_path}': {str(e)}")
 
-    with open(args.output_file, 'w') as output:
-        output.write(''.join(strings))
-        print(f"Wrote {len(strings)} file(s) to {args.output_file}")
+    with open(args.output_file, 'w') as out:
+        out.write(result)
+        print(f"Wrote {len(args.file)} file(s) to {args.output_file}")
 
 
 if __name__ == "__main__":
-    sys.exit(read_file_args())
+    sys.exit(rominfo())

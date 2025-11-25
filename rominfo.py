@@ -1,7 +1,6 @@
 import sys
 import argparse
-from helpers.outputs import get_dat_string
-from helpers.outputs import get_file_string
+from helpers.outputs import get_dat_string, get_file_string
 
 
 def read_file_args():
@@ -33,11 +32,8 @@ def read_file_args():
     for file_path in args.file:
         try:
             print(f"Processing {file_path}...")
-            string = ''
-            if args.dat:
-                string = get_dat_string(file_path)
-            else:
-                string = get_file_string(file_path)
+            string = get_dat_string(
+                file_path) if args.dat else get_file_string(file_path)
             strings.append(string)
         except FileNotFoundError:
             print(f"Error: File '{file_path}' not found.")

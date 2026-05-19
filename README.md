@@ -1,30 +1,23 @@
 # rominfo
-A Python utility for generating hashes for ROM files, specifically for No-Intro submissions.
+A utility for generating hashes for ROM files, specifically for No-Intro submissions.
 
 # Usage
-* Requires Python 3.13+
-```shell
-python rominfo.py [args]
-```
-
 ``` shell
-usage: rominfo.py [-h] [-d] [-o [OUTPUT_FILE]] file [file ...]
+Usage: rominfo [OPTIONS] [INPUT_FILES]...
 
-Generate common hashes for ROM files.
+Arguments:
+  [INPUT_FILES]...  Binary files to hash
 
-positional arguments:
-  file                  path(s) to ROM file
-
-options:
-  -h, --help            show this help message and exit
-  -d, --dat             Output as Redump DAT lines
-  -o, --output_file [OUTPUT_FILE]
-                        Specify output file path (defaults to hashes.txt)
+Options:
+  -o, --output-file <OUTPUT_FILE>  [default: hashes.txt]
+  -d, --dat                        Output Redump DAT lines
+  -h, --help                       Print help
+  -V, --version                    Print version
 ```
 
 ## KDE/Dolphin service menu entry (for right-click context menu)
 1. Place `rominfo.desktop` in `~/.local/share/kio/servicemenus` (Create if it doesn't exist yet)
-2. Update the `Exec` paths to point to `rominfo.py` from this repo.
+2. Update the `Exec` paths to point to an absolute path for `rominfo`.
 
 # Example outputs
 

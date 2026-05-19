@@ -11,9 +11,9 @@ X-KDE-Submenu=ROM Info
 [Desktop Action 1GetHashes]
 Name=Get hashes
 Icon=quickhash
-Exec=python /home/nick/Developer/vphoebe/rominfo/rominfo.py %F
+Exec=/home/nick/Apps/bin/rominfo %F
 
 [Desktop Action 2GetDATLines]
 Name=Get Redump DAT lines
 Icon=quickhash
-Exec=python /home/nick/Developer/vphoebe/rominfo/rominfo.py -d %F
+Exec=/home/nick/Apps/bin/rominfo -d %F

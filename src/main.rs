@@ -19,19 +19,19 @@ struct Cli {
 
 fn main() {
     let cli = Cli::parse();
-    let mut lines: Vec<String> = Vec::new();
     if cli.input_files.is_empty() {
         println!("No input files specified.");
         std::process::exit(1);
     }
 
+    let mut lines: Vec<String> = Vec::new();
     for input in &cli.input_files {
         let data = get_hashes(input);
         let line = format_data(&data, cli.dat);
         lines.push(line);
     }
 
-    write_file(&&cli.output_file, lines.join("\n")).expect("failed to write output file");
+    write_file(&cli.output_file, lines.join("\n")).expect("failed to write output file");
     println!(
         "Wrote info for {} file(s) to {}",
         &cli.input_files.len(),
